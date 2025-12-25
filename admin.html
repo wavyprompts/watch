@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | TheWatchList</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">🎬 TheWatchList</a>
+        <a href="index.html" style="color:white; text-decoration:none;">← Back Home</a>
+    </nav>
+
+    <div class="section-container" style="max-width: 600px;">
+        <h1 class="page-title">Admin Panel</h1>
+        <form id="addForm" class="glass" style="padding: 30px; border-radius: 20px;">
+            <label>Title</label>
+            <input type="text" name="title" required>
+
+            <label>Category</label>
+            <select name="category">
+                <option value="kdrama">K-Drama</option>
+                <option value="hollywood">Hollywood</option>
+                <option value="bollywood">Bollywood</option>
+                <option value="anime">Anime</option>
+            </select>
+
+            <label>Poster URL (Direct Image Link)</label>
+            <input type="url" name="poster" required>
+
+            <label>YouTube Trailer Link</label>
+            <input type="url" name="trailerUrl" placeholder="https://youtube.com/watch?v=...">
+
+            <label>Year</label>
+            <input type="number" name="year" value="2025">
+
+            <label>Rating (1-10)</label>
+            <input type="number" name="rating" step="0.1" max="10">
+
+            <button type="submit" class="admin-btn">💾 Save to Watchlist</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('addForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            // Extract YouTube ID
+            const url = formData.get('trailerUrl');
+            let vidId = "";
+            if(url) {
+                vidId = url.split('v=')[1]?.split('&')[0] || url.split('/').pop();
+            }
+
+            const item = {
+                title: formData.get('title'),
+                category: formData.get('category'),
+                poster: formData.get('poster'),
+                trailerId: vidId,
+                year: formData.get('year'),
+                rating: formData.get('rating')
+            };
+
+            const list = JSON.parse(localStorage.getItem('watchlist')) || [];
+            list.push(item);
+            localStorage.setItem('watchlist', JSON.stringify(list));
+            alert("Added!");
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
